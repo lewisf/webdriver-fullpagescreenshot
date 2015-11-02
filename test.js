@@ -1,18 +1,21 @@
-var webdriverio = require('webdriverio');
-var saveFullScreenshot = require('./index');
+import webdriverio from 'webdriverio';
+import saveFullPageScreenshot from './lib/saveFullPageScreenshot';
 
-var options = {
+const options = {
   desiredCapabilities: {
     browserName: 'chrome'
   }
 };
 
-webdriverio
-  .remote(options)
-  .addCommand(saveFullScreenshot.name, saveFullScreenshot.command)
+const client = webdriverio.remote(options);
+client.addCommand(saveFullPageScreenshot.name, saveFullPageScreenshot.command);
+
+client
   .init()
-  .url('http://www.google.com')
-  .title(function(err, res) {
+  .url('https://www.google.com/intl/en/about/')
+  .setViewportSize({width: 480, height: 600}, false)
+  .saveFullPageScreenshot('googleAbout')
+  .title((err, res) => {
     console.log('Title was ' + res.value);
   })
   .end();
