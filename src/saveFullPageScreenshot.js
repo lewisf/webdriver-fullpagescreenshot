@@ -1,6 +1,10 @@
 import Q from './q-with-while';
 import takeViewportShots from './takeViewportShots';
 import preparePageScan from './preparePageScan';
+import combineShots from './combineShots';
+import resetScroll from './resetScroll';
+import {createTmpDir, removeTmpDir} from './tmpDir';
+
 /**
  * saveFullPageScreenshot
  *
@@ -18,23 +22,16 @@ import preparePageScan from './preparePageScan';
 
 exports.name = 'saveFullPageScreenshot'
 exports.command = function saveFullPageScreenshot(fileName) {
-  const boundTakeViewportShots = takeViewportShots.bind(this);
+  const client = this;
 
   return Q()
-    .then(preparePageScan.bind(this))
-    .then(takeViewportShots.bind(this))
-  /*
-  client
-    .createTmpDirectory(filePath)
-    .takeViewportShots()
-    .concatShots()
-    .cropShot()
-    .cleanTmpDirectory()
-    .resetScroll()
-  */
-
-  /*
-  return this
-    .saveScreenshot(fileName + '.png');
-  */
+    .then(function() {
+      return {fileName: fileName};
+    })
+    .then(createTmpDir.bind(client))
+    .then(preparePageScan.bind(client))
+    .then(takeViewportShots.bind(client))
+    .then(combineShots.bind(client))
+    .then(removeTmpDir.bind(client))
+    .then(resetScroll.bind(client));
 };

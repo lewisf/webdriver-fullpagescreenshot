@@ -15,7 +15,4 @@ init().
 url('https://www.google.com/intl/en/about/').
 setViewportSize({ width: 480, height: 600 }, false).
 saveFullPageScreenshot('googleAbout').
-title(function (err, res) {
-  console.log('Title was ' + res.value);}).
-
 end();

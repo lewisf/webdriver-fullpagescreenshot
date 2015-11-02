@@ -1,7 +1,6 @@
-/* globals browser */
-var gm = require('gm');
-
-var Q = require('./q-with-while');
+import fs from 'fs';
+import gm from 'gm';
+import Q from './q-with-while';
 
 var scrollFn = function(width, height) {
   if (document.all && !document.addEventListener) {
@@ -20,17 +19,27 @@ var scrollFn = function(width, height) {
     document.body.style.msTransform = 'translate(-' + width + 'px, -' + height + 'px)';
     document.body.style.oTransform = 'translate(-' + width + 'px, -' + height + 'px)';
     document.body.style.transform = 'translate(-' + width + 'px, -' + height + 'px)';
+    return;
   }
 };
 
-module.exports = function takeViewportShots({documentWidth, documentHeight, screenWidth, screenHeight, devicePixelRatio, tmpDir}) {
-  console.info('Running takeViewportShots');
+module.exports = function takeViewportShots(options) {
+  // console.info('Running takeViewportShots');
+
+  var client = this;
+  const {
+    documentWidth,
+    documentHeight,
+    screenWidth,
+    screenHeight,
+    devicePixelRatio,
+    fileName,
+    tmpDir
+  } = options;
 
   var currentXPos = 0;
   var currentYPos = 0;
-  var cropImages = [];
-  tmpDir = '/Users/lchung/Code/webdriver-fullscreenshot/screenShots';
-
+  var cropImages = {};
   // var shotBuffers = [];
 
   return Q.while(function() {
@@ -39,7 +48,7 @@ module.exports = function takeViewportShots({documentWidth, documentHeight, scre
       currentXPos < (documentWidth / screenWidth);
   }, function() {
     // console.log(`Taking viewport screenshot @ [${currentXPos},${currentYPos}].`);
-    return this.saveScreenshot(function(err, screenshot, response) {
+    return client.saveScreenshot(function(err, screenshot, response) {
       // console.log(`Processing screenshot @ [${currentXPos},${currentYPos}]`);
       var gmImage = gm(screenshot);
 
@@ -50,7 +59,7 @@ module.exports = function takeViewportShots({documentWidth, documentHeight, scre
 
       gmImage.crop(screenWidth, screenHeight, 0, 0);
       return gmImage;
-    }.bind(this))
+    })
     .then(function(gmImage) {
       var deferred = Q.defer();
       var file = `${tmpDir}/${currentXPos}-${currentYPos}.png`;
@@ -58,15 +67,10 @@ module.exports = function takeViewportShots({documentWidth, documentHeight, scre
         if (error) {
           console.error(error);
         }
-
         deferred.resolve(file);
       });
 
       return deferred.promise;
-    })
-    .then(function(file) {
-      // console.log(`Saved screenshot @ [${currentXPos},${currentYPos}] to ${file}`);
-      return file;
     })
     .then(function(file) {
       if (!cropImages[currentXPos]) {
@@ -79,17 +83,16 @@ module.exports = function takeViewportShots({documentWidth, documentHeight, scre
         currentYPos = 0;
         currentXPos = currentXPos + 1;
       }
-    }.bind(this)).then(function(file) {
+    }).then(function(file) {
       // console.log(`Executing scroll to [${currentXPos}, ${currentYPos}].`);
-      return this.execute(
+      return client.execute(
         scrollFn,
         currentXPos * screenWidth,
         currentYPos * screenHeight
       );
-    }.bind(this));
-  }.bind(this))
+    });
+  })
   .then(function() {
-    console.log(cropImages);
-    return this;
-  }.bind(this));
+    return Object.assign({}, options, {cropImages: cropImages});
+  });
 };

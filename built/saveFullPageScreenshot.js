@@ -1,4 +1,8 @@
-'use strict';var _qWithWhile = require('./q-with-while');var _qWithWhile2 = _interopRequireDefault(_qWithWhile);var _takeViewportShots = require('./takeViewportShots');var _takeViewportShots2 = _interopRequireDefault(_takeViewportShots);var _preparePageScan = require('./preparePageScan');var _preparePageScan2 = _interopRequireDefault(_preparePageScan);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+'use strict';var _qWithWhile = require('./q-with-while');var _qWithWhile2 = _interopRequireDefault(_qWithWhile);var _takeViewportShots = require('./takeViewportShots');var _takeViewportShots2 = _interopRequireDefault(_takeViewportShots);var _preparePageScan = require('./preparePageScan');var _preparePageScan2 = _interopRequireDefault(_preparePageScan);var _combineShots = require('./combineShots');var _combineShots2 = _interopRequireDefault(_combineShots);var _resetScroll = require('./resetScroll');var _resetScroll2 = _interopRequireDefault(_resetScroll);var _tmpDir = require('./tmpDir');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+
+
+
 
 
 /**
@@ -18,22 +22,15 @@
 
 exports.name = 'saveFullPageScreenshot';
 exports.command = function saveFullPageScreenshot(fileName) {
-  var boundTakeViewportShots = _takeViewportShots2.default.bind(this);
+  var client = this;
 
   return (0, _qWithWhile2.default)().
-  then(_preparePageScan2.default.bind(this)).
-  then(_takeViewportShots2.default.bind(this));
-  /*
-  client
-    .createTmpDirectory(filePath)
-    .takeViewportShots()
-    .concatShots()
-    .cropShot()
-    .cleanTmpDirectory()
-    .resetScroll()
-  */
+  then(function () {
+    return { fileName: fileName };}).
 
-  /*
-  return this
-    .saveScreenshot(fileName + '.png');
-  */};
+  then(_tmpDir.createTmpDir.bind(client)).
+  then(_preparePageScan2.default.bind(client)).
+  then(_takeViewportShots2.default.bind(client)).
+  then(_combineShots2.default.bind(client)).
+  then(_tmpDir.removeTmpDir.bind(client)).
+  then(_resetScroll2.default.bind(client));};
