@@ -1,4 +1,4 @@
-'use strict';var _webdriverio = require('webdriverio');var _webdriverio2 = _interopRequireDefault(_webdriverio);var _saveFullPageScreenshot = require('./lib/saveFullPageScreenshot');var _saveFullPageScreenshot2 = _interopRequireDefault(_saveFullPageScreenshot);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+'use strict';var _webdriverio = require('webdriverio');var _webdriverio2 = _interopRequireDefault(_webdriverio);var _saveFullPageScreenshot = require('./built/saveFullPageScreenshot');var _saveFullPageScreenshot2 = _interopRequireDefault(_saveFullPageScreenshot);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 
 var options = { 

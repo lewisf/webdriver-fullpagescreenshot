@@ -1,4 +1,6 @@
-'use strict';var _takeViewportShots = require('./takeViewportShots');var _takeViewportShots2 = _interopRequireDefault(_takeViewportShots);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+'use strict';var _qWithWhile = require('./q-with-while');var _qWithWhile2 = _interopRequireDefault(_qWithWhile);var _takeViewportShots = require('./takeViewportShots');var _takeViewportShots2 = _interopRequireDefault(_takeViewportShots);var _preparePageScan = require('./preparePageScan');var _preparePageScan2 = _interopRequireDefault(_preparePageScan);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+
 /**
  * saveFullPageScreenshot
  *
@@ -14,10 +16,13 @@
  * @param {string} fileName path of generated image relative to execution directory
  */
 
-var Q = require('q');
-
 exports.name = 'saveFullPageScreenshot';
 exports.command = function saveFullPageScreenshot(fileName) {
+  var boundTakeViewportShots = _takeViewportShots2.default.bind(this);
+
+  return (0, _qWithWhile2.default)().
+  then(_preparePageScan2.default.bind(this)).
+  then(_takeViewportShots2.default.bind(this));
   /*
   client
     .createTmpDirectory(filePath)

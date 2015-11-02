@@ -1,4 +1,6 @@
+import Q from './q-with-while';
 import takeViewportShots from './takeViewportShots';
+import preparePageScan from './preparePageScan';
 /**
  * saveFullPageScreenshot
  *
@@ -14,10 +16,13 @@ import takeViewportShots from './takeViewportShots';
  * @param {string} fileName path of generated image relative to execution directory
  */
 
-var Q = require('q');
-
 exports.name = 'saveFullPageScreenshot'
 exports.command = function saveFullPageScreenshot(fileName) {
+  const boundTakeViewportShots = takeViewportShots.bind(this);
+
+  return Q()
+    .then(preparePageScan.bind(this))
+    .then(takeViewportShots.bind(this))
   /*
   client
     .createTmpDirectory(filePath)

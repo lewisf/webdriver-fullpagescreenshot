@@ -2,10 +2,10 @@
   "name": "webdriver-fullscreenshot",
   "version": "0.0.1",
   "description": "Save a full page screenshot with any driver using Webdriver",
-  "main": "lib/saveFullPageScreenshot.js",
+  "main": "built/saveFullPageScreenshot.js",
   "scripts": {
     "test": "node test-compiled.js",
-    "watch": "babel test.js --watch --out-file test-compiled.js & babel src --watch --out-dir lib",
+    "watch": "babel test.js --watch --out-file test-compiled.js & babel src --watch --out-dir built",
     "selenium": "selenium-standalone start 1>/dev/null",
     "selenium:install": "selenium-standalone install"
   },

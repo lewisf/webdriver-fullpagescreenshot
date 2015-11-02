@@ -1,9 +1,9 @@
-/* globals browser */
+'use strict'; /* globals browser */
 var gm = require('gm');
 
 var Q = require('./q-with-while');
 
-var scrollFn = function(width, height) {
+var scrollFn = function scrollFn(width, height) {
   if (document.all && !document.addEventListener) {
     /* < IE8 */
     /**
@@ -12,18 +12,18 @@ var scrollFn = function(width, height) {
      */
     document.body.style.marginTop = '-' + height + 'px';
     document.body.style.marginLeft = '-' + width + 'px';
-    return;
-  } else {
+    return;} else 
+  {
     /* Modern */
     document.body.style.webkitTransform = 'translate(-' + width + 'px, -' + height + 'px)';
     document.body.style.mozTransform = 'translate(-' + width + 'px, -' + height + 'px)';
     document.body.style.msTransform = 'translate(-' + width + 'px, -' + height + 'px)';
     document.body.style.oTransform = 'translate(-' + width + 'px, -' + height + 'px)';
-    document.body.style.transform = 'translate(-' + width + 'px, -' + height + 'px)';
-  }
-};
+    document.body.style.transform = 'translate(-' + width + 'px, -' + height + 'px)';}};
 
-module.exports = function takeViewportShots({documentWidth, documentHeight, screenWidth, screenHeight, devicePixelRatio, tmpDir}) {
+
+
+module.exports = function takeViewportShots(_ref) {var documentWidth = _ref.documentWidth;var documentHeight = _ref.documentHeight;var screenWidth = _ref.screenWidth;var screenHeight = _ref.screenHeight;var devicePixelRatio = _ref.devicePixelRatio;var tmpDir = _ref.tmpDir;
   console.info('Running takeViewportShots');
 
   var currentXPos = 0;
@@ -33,63 +33,62 @@ module.exports = function takeViewportShots({documentWidth, documentHeight, scre
 
   // var shotBuffers = [];
 
-  return Q.while(function() {
+  return Q.while(function () {
     // console.log(`Current Pos: [${currentXPos},${currentYPos}]`);
-    return currentYPos < (documentHeight / screenHeight) &&
-      currentXPos < (documentWidth / screenWidth);
-  }, function() {
+    return currentYPos < documentHeight / screenHeight && 
+    currentXPos < documentWidth / screenWidth;}, 
+  (function () {
     // console.log(`Taking viewport screenshot @ [${currentXPos},${currentYPos}].`);
-    return this.saveScreenshot(function(err, screenshot, response) {
+    return this.saveScreenshot((function (err, screenshot, response) {
       // console.log(`Processing screenshot @ [${currentXPos},${currentYPos}]`);
       var gmImage = gm(screenshot);
 
       if (devicePixelRatio > 1) {
         var percent = 100 / devicePixelRatio;
-        gmImage.resize(percent, percent, '%');
-      }
+        gmImage.resize(percent, percent, '%');}
+
 
       gmImage.crop(screenWidth, screenHeight, 0, 0);
-      return gmImage;
-    }.bind(this))
-    .then(function(gmImage) {
+      return gmImage;}).
+    bind(this)).
+    then(function (gmImage) {
       var deferred = Q.defer();
-      var file = `${tmpDir}/${currentXPos}-${currentYPos}.png`;
-      gmImage.write(file, function(error) {
+      var file = tmpDir + '/' + currentXPos + '-' + currentYPos + '.png';
+      gmImage.write(file, function (error) {
         if (error) {
-          console.error(error);
-        }
+          console.error(error);}
 
-        deferred.resolve(file);
-      });
 
-      return deferred.promise;
-    })
-    .then(function(file) {
+        deferred.resolve(file);});
+
+
+      return deferred.promise;}).
+
+    then(function (file) {
       // console.log(`Saved screenshot @ [${currentXPos},${currentYPos}] to ${file}`);
-      return file;
-    })
-    .then(function(file) {
+      return file;}).
+
+    then((function (file) {
       if (!cropImages[currentXPos]) {
-        cropImages[currentXPos] = [];
-      }
+        cropImages[currentXPos] = [];}
+
 
       cropImages[currentXPos][currentYPos] = file;
       currentYPos = currentYPos + 1;
       if (currentYPos > Math.floor(documentHeight / screenHeight)) {
         currentYPos = 0;
-        currentXPos = currentXPos + 1;
-      }
-    }.bind(this)).then(function(file) {
+        currentXPos = currentXPos + 1;}}).
+
+    bind(this)).then((function (file) {
       // console.log(`Executing scroll to [${currentXPos}, ${currentYPos}].`);
       return this.execute(
-        scrollFn,
-        currentXPos * screenWidth,
-        currentYPos * screenHeight
-      );
-    }.bind(this));
-  }.bind(this))
-  .then(function() {
+      scrollFn, 
+      currentXPos * screenWidth, 
+      currentYPos * screenHeight);}).
+
+    bind(this));}).
+  bind(this)).
+  then((function () {
     console.log(cropImages);
-    return this;
-  }.bind(this));
-};
+    return this;}).
+  bind(this));};

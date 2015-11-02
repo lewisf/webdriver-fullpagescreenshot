@@ -1,5 +1,5 @@
 import webdriverio from 'webdriverio';
-import saveFullPageScreenshot from './lib/saveFullPageScreenshot';
+import saveFullPageScreenshot from './built/saveFullPageScreenshot';
 
 const options = {
   desiredCapabilities: {
