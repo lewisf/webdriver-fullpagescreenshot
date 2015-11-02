@@ -1,5 +1,5 @@
 {
-  "name": "webdriver-fullscreenshot",
+  "name": "webdriver-fullpagescreenshot",
   "version": "0.0.1",
   "description": "Save a full page screenshot with any driver using Webdriver",
   "main": "built/saveFullPageScreenshot.js",
