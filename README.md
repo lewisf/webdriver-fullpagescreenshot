@@ -16,6 +16,12 @@ var saveFullPageScreenshot = require('saveFullPageScreenshot');
 client.addCommand(saveFullPageScreenshot.name, saveFullPageScreenshot.command);
 ```
 
+You can also override the default saveScreenshot command:
+```
+var saveFullPageScreenshot = require('saveFullPageScreenshot');
+client.addCommand('saveScreenshot', saveFullPageScreenshot.command, true);
+```
+
 ### Developing
 
 ```
