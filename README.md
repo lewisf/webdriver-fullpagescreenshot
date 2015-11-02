@@ -4,6 +4,8 @@ Take a full page screenshot with any selenium driver using WebdriverIO.
 
 ### Installation
 
+This requires graphics-magick. Refer to here to install graphicsmagick: https://www.npmjs.com/package/gm
+
 ```
 npm install --save webdriver-fullpagescreenshot
 ```
